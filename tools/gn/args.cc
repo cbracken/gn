@@ -292,6 +292,8 @@ void Args::SetSystemVarsLocked(Scope* dest) const {
   os = "win";
 #elif defined(OS_MACOSX)
   os = "mac";
+#elif defined(OS_FREEBSD)
+  os = "freebsd";
 #elif defined(OS_LINUX)
   os = "linux";
 #elif defined(OS_AIX)

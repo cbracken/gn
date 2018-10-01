@@ -5,6 +5,7 @@
 #include "tools/gn/exec_process.h"
 
 #include <stddef.h>
+#include <signal.h>
 
 #include <memory>
 

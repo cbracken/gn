@@ -31,6 +31,8 @@ class Platform(object):
       self._platform = 'linux'
     elif self._platform.startswith('darwin'):
       self._platform = 'darwin'
+    elif self._platform.startswith('freebsd'):
+      self._platform = 'freebsd'
     elif self._platform.startswith('mingw'):
       self._platform = 'mingw'
     elif self._platform.startswith('win'):
@@ -42,7 +44,7 @@ class Platform(object):
 
   @staticmethod
   def known_platforms():
-    return ['linux', 'darwin', 'msvc', 'aix', 'fuchsia']
+    return ['linux', 'darwin', 'freebsd', 'msvc', 'aix', 'fuchsia']
 
   def platform(self):
     return self._platform
@@ -62,11 +64,14 @@ class Platform(object):
   def is_darwin(self):
     return self._platform == 'darwin'
 
+  def is_freebsd(self):
+    return self._platform == 'freebsd'
+
   def is_aix(self):
     return self._platform == 'aix'
 
   def is_posix(self):
-    return self._platform in ['linux', 'darwin', 'aix']
+    return self._platform in ['linux', 'darwin', 'freebsd', 'aix']
 
 
 def main(argv):
@@ -166,6 +171,7 @@ def WriteGenericNinja(path, static_libraries, executables,
   template_filename = os.path.join(SCRIPT_DIR, {
       'msvc': 'build_win.ninja.template',
       'darwin': 'build_mac.ninja.template',
+      'freebsd': 'build_freebsd.ninja.template',
       'linux': 'build_linux.ninja.template',
       'aix': 'build_aix.ninja.template',
   }[platform.platform()])
@@ -288,7 +294,7 @@ def WriteGNNinja(path, platform, host, options):
         ldflags.append('-Wl,--gc-sections')
 
       # Omit all symbol information from the output file.
-      if platform.is_darwin():
+      if platform.is_darwin() or platform.is_freebsd():
         ldflags.append('-Wl,-S')
       elif platform.is_aix():
         ldflags.append('-Wl,-s')
@@ -324,6 +330,10 @@ def WriteGNNinja(path, platform, host, options):
       min_mac_version_flag = '-mmacosx-version-min=10.9'
       cflags.append(min_mac_version_flag)
       ldflags.append(min_mac_version_flag)
+    elif platform.is_freebsd():
+      libs.extend(['-lexecinfo', '-lkvm'])
+      ldflags.extend(['-pthread'])
+      include_dirs += ["/usr/local/include"]
     elif platform.is_aix():
       cflags_cc.append('-maix64')
       ldflags.extend(['-maix64', '-pthread'])

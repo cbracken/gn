@@ -188,6 +188,7 @@ Possible values
 
   - "android"
   - "chromeos"
+  - "freebsd"
   - "ios"
   - "linux"
   - "nacl"

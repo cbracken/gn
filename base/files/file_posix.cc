@@ -93,7 +93,7 @@ void File::Info::FromStat(const stat_wrapper_t& stat_info) {
   int64_t last_accessed_nsec = stat_info.st_atim.tv_nsec;
   time_t creation_time_sec = stat_info.st_ctim.tv_sec;
   int64_t creation_time_nsec = stat_info.st_ctim.tv_nsec;
-#elif defined(OS_MACOSX)
+#elif defined(OS_MACOSX) || defined(OS_FREEBSD)
   time_t last_modified_sec = stat_info.st_mtimespec.tv_sec;
   int64_t last_modified_nsec = stat_info.st_mtimespec.tv_nsec;
   time_t last_accessed_sec = stat_info.st_atimespec.tv_sec;

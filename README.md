@@ -25,9 +25,9 @@ On Windows, it is expected that `cl.exe`, `link.exe`, and `lib.exe` can be found
 in `PATH`, so you'll want to run from a Visual Studio command prompt, or
 similar.
 
-On Linux and Mac, the default compiler is `clang++`, a recent version is
-expected to be found in `PATH`. This can be overridden by setting `CC`, `CXX`,
-and `AR`.
+On Linux, Mac, and FreeBSD the default compiler is `clang++`, a recent version
+is expected to be found in `PATH`. This can be overridden by setting `CC`,
+`CXX`, and `AR`.
 
 ## Reporting bugs
 

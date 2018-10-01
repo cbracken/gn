@@ -13,6 +13,8 @@
 #include <mach-o/dyld.h>
 #elif defined(OS_WIN)
 #include <windows.h>
+#elif defined(OS_FREEBSD)
+#include <sys/sysctl.h>
 #endif
 
 #if defined(OS_MACOSX)
@@ -44,6 +46,20 @@ base::FilePath GetExePath() {
     return base::FilePath();
   }
   return base::FilePath(system_buffer);
+}
+
+#elif defined(OS_FREEBSD)
+
+base::FilePath GetExePath() {
+  int mib[4];
+  mib[0] = CTL_KERN;
+  mib[1] = KERN_PROC;
+  mib[2] = KERN_PROC_PATHNAME;
+  mib[3] = -1;
+  char path[PATH_MAX];
+  size_t len = sizeof(path);
+  sysctl(mib, 4, path, &len, NULL, 0);
+  return base::FilePath(path);
 }
 
 #else
